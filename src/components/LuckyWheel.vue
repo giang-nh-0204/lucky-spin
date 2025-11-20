@@ -10,25 +10,25 @@ interface Prize {
 }
 
 const initialPrizes: Prize[] = [
-  { id: 1, name: 'Cao băng bạo', price: 120, image: '/images/cao-bang-bao.jpg', color: '#FF6B6B' },
-  { id: 2, name: 'Cao bí hựu', price: 200, image: '/images/cao-bi-huu.jpg', color: '#4ECDC4' },
-  { id: 3, name: 'Cao di hồn', price: 100, image: '/images/cao-di-hon.jpg', color: '#45B7D1' },
-  { id: 4, name: 'Cao huyết bạo', price: 750, image: '/images/cao-huyet-bao.jpg', color: '#F7DC6F' },
-  { id: 5, name: 'Cao linh đông', price: 500, image: '/images/cao-linh-dong.jpg', color: '#BB8FCE' },
-  { id: 6, name: 'Cao mãnh kích', price: 750, image: '/images/cao-manh-kich.jpg', color: '#85C1E2' },
-  { id: 7, name: 'Cao ngưng thần', price: 450, image: '/images/cao-ngung-than.jpg', color: '#F8B739' },
-  { id: 8, name: 'Cao cường thân', price: 450, image: '/images/cao-cuong-than.jpg', color: '#52C469' },
-  { id: 9, name: 'Cao phản chấn', price: 300, image: '/images/cao-phan-chan.jpg', color: '#FF8C94' },
-  { id: 10, name: 'Cao phản kich', price: 300, image: '/images/cao-phan-kich.jpg', color: '#A8E6CF' },
-  { id: 11, name: 'Cao phụ thân', price: 150, image: '/images/cao-phu-than.jpg', color: '#FFD3B6' },
-  { id: 12, name: 'Cao tá lực', price: 150, image: '/images/cao-ta-luc.jpg', color: '#FFAAA5' },
-  { id: 13, name: 'Cao thế sát', price: 600, image: '/images/cao-the-sat.jpg', color: '#FF8B94' },
-  { id: 14, name: 'Cao thị huyết', price: 100, image: '/images/cao-thi-huyet.jpg', color: '#A8D8EA' },
-  { id: 15, name: 'Cao thuấn ảnh', price: 400, image: '/images/cao-thuan-anh.jpg', color: '#AA96DA' },
-  { id: 16, name: 'Cao nội lực', price: 600, image: '/images/cao-noi-luc.jpg', color: '#FCBAD3' },
-  { id: 17, name: 'Cao cộng sinh', price: 300, image: '/images/cao-cong-sinh.jpg', color: '#FFFFD2' },
-  { id: 18, name: 'Cao nhục tường', price: 100, image: '/images/cao-nhuc-tuong.jpg', color: '#A0CED9' },
-  { id: 19, name: 'Cao Huyết tế', price: 4500, image: '/images/cao-huyet-te.jpg', color: '#FFC09F' }
+  { id: 1, name: 'Cao băng bạo', price: 120, image: 'images/cao-bang-bao.jpg', color: '#FF6B6B' },
+  { id: 2, name: 'Cao bí hựu', price: 200, image: 'images/cao-bi-huu.jpg', color: '#4ECDC4' },
+  { id: 3, name: 'Cao di hồn', price: 100, image: 'images/cao-di-hon.jpg', color: '#45B7D1' },
+  { id: 4, name: 'Cao huyết bạo', price: 750, image: 'images/cao-huyet-bao.jpg', color: '#F7DC6F' },
+  { id: 5, name: 'Cao linh đông', price: 500, image: 'images/cao-linh-dong.jpg', color: '#BB8FCE' },
+  { id: 6, name: 'Cao mãnh kích', price: 750, image: 'images/cao-manh-kich.jpg', color: '#85C1E2' },
+  { id: 7, name: 'Cao ngưng thần', price: 450, image: 'images/cao-ngung-than.jpg', color: '#F8B739' },
+  { id: 8, name: 'Cao cường thân', price: 450, image: 'images/cao-cuong-than.jpg', color: '#52C469' },
+  { id: 9, name: 'Cao phản chấn', price: 300, image: 'images/cao-phan-chan.jpg', color: '#FF8C94' },
+  { id: 10, name: 'Cao phản kich', price: 300, image: 'images/cao-phan-kich.jpg', color: '#A8E6CF' },
+  { id: 11, name: 'Cao phụ thân', price: 150, image: 'images/cao-phu-than.jpg', color: '#FFD3B6' },
+  { id: 12, name: 'Cao tá lực', price: 150, image: 'images/cao-ta-luc.jpg', color: '#FFAAA5' },
+  { id: 13, name: 'Cao thế sát', price: 600, image: 'images/cao-the-sat.jpg', color: '#FF8B94' },
+  { id: 14, name: 'Cao thị huyết', price: 100, image: 'images/cao-thi-huyet.jpg', color: '#A8D8EA' },
+  { id: 15, name: 'Cao thuấn ảnh', price: 400, image: 'images/cao-thuan-anh.jpg', color: '#AA96DA' },
+  { id: 16, name: 'Cao nội lực', price: 600, image: 'images/cao-noi-luc.jpg', color: '#FCBAD3' },
+  { id: 17, name: 'Cao cộng sinh', price: 300, image: 'images/cao-cong-sinh.jpg', color: '#FFFFD2' },
+  { id: 18, name: 'Cao nhục tường', price: 100, image: 'images/cao-nhuc-tuong.jpg', color: '#A0CED9' },
+  { id: 19, name: 'Cao Huyết tế', price: 4500, image: 'images/cao-huyet-te.jpg', color: '#FFC09F' }
 ]
 
 const prizes = ref<Prize[]>([...initialPrizes])
@@ -56,8 +56,13 @@ const shufflePrizes = () => {
 
   const shuffled = [...prizes.value]
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    const j = Math.floor(Math.random() * (i + 1))
+    const temp = shuffled[i]
+    const other = shuffled[j]
+    if (temp && other) {
+      shuffled[i] = other
+      shuffled[j] = temp
+    }
   }
   prizes.value = shuffled
 }
@@ -88,14 +93,18 @@ const spinWheel = () => {
   const probs = probabilities.value
 
   for (let i = 0; i < probs.length; i++) {
-    cumulativeProbability += probs[i]
+    const prob = probs[i]
+    if (prob === undefined) continue
+    cumulativeProbability += prob
     if (random <= cumulativeProbability) {
       selectedPrizeIndex = i
       break
     }
   }
 
-  currentPrize.value = prizes.value[selectedPrizeIndex]
+  const selectedPrize = prizes.value[selectedPrizeIndex]
+  if (!selectedPrize) return
+  currentPrize.value = selectedPrize
 
   // Tính góc quay
   const prizeAngle = 360 / prizes.value.length
