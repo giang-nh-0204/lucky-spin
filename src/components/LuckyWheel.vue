@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 interface Prize {
   id: number
@@ -79,6 +79,46 @@ const lastAngle = ref(0)
 const dragVelocity = ref(0)
 const lastTime = ref(0)
 
+// Responsive wheel size
+const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1920)
+const wheelSize = computed(() => {
+  const w = windowWidth.value
+  if (w < 640) return 280 // mobile
+  if (w < 768) return 350 // sm
+  if (w < 1024) return 450 // md
+  if (w < 1280) return 550 // lg
+  return 600 // xl
+})
+
+const wheelConfig = computed(() => {
+  const size = wheelSize.value
+  const padding = 16 // p-4 = 16px
+  const innerSize = size - padding * 2
+  const center = innerSize / 2
+  const radius = center * 0.86 // ~86% of center for image placement
+  const imageSize = size < 640 ? 32 : size < 768 ? 36 : size < 1024 ? 40 : 48 // responsive image size
+  const fontSize = size < 640 ? 3.5 : size < 768 ? 4 : size < 1024 ? 4.5 : 5 // SVG text font size
+  const legendaryFontSize = fontSize * 1.2
+  return { size, center, radius, imageSize, fontSize, legendaryFontSize }
+})
+
+const updateWindowWidth = () => {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', updateWindowWidth)
+    updateWindowWidth()
+  }
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', updateWindowWidth)
+  }
+})
+
 const spinWheel = () => {
   if (isSpinning.value) return
 
@@ -146,11 +186,14 @@ const getPrizeImageStyle = (index: number, total: number) => {
   const angle = 360 / total
   const midAngle = index * angle + angle / 2 - 90
   const midAngleRad = midAngle * (Math.PI / 180)
-  // Wheel = 600px, padding = 16px * 2, rotating div = 568px, center = 284px
-  const center = 284
-  const radius = 245 // px from center (xa tâm hơn, nằm dưới text)
-  const left = center + radius * Math.cos(midAngleRad) - 24 // -24 = half image width (48/2)
-  const top = center + radius * Math.sin(midAngleRad) - 24 // -24 = half image height
+
+  // Use responsive wheel config
+  const config = wheelConfig.value
+  const { center, radius, imageSize } = config
+  const halfImage = imageSize / 2
+
+  const left = center + radius * Math.cos(midAngleRad) - halfImage
+  const top = center + radius * Math.sin(midAngleRad) - halfImage
 
   // Ảnh xoay theo góc của segment (không cộng rotation vì container đã xoay rồi)
   const imageRotation = midAngle
@@ -231,35 +274,35 @@ if (typeof window !== 'undefined') {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 py-12">
+  <div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 py-4 sm:py-8 md:py-12 px-4">
     <div class="container">
       <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-5xl font-bold text-white mb-2 drop-shadow-lg">
+      <div class="text-center mb-4 sm:mb-6 md:mb-8">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 drop-shadow-lg">
           Vòng Quay May Mắn
         </h1>
-        <p class="text-xl text-purple-200 mb-4">
+        <p class="text-sm sm:text-base md:text-lg lg:text-xl text-purple-200 mb-3 sm:mb-4">
           Quay để nhận Bí Kíp quý giá!
         </p>
         <button
           @click="shufflePrizes"
           :disabled="isSpinning"
-          class="px-6 py-2 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-sm shadow-xl transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-white"
+          class="px-4 py-2 sm:px-6 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-xs sm:text-sm shadow-xl transform transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-white"
         >
           🎲 TRỘN
         </button>
       </div>
 
       <!-- Wheel Container -->
-      <div class="relative flex justify-center items-center mb-8">
+      <div class="relative flex justify-center items-center mb-4 sm:mb-6 md:mb-8">
         <!-- Wheel -->
         <div
-          class="relative w-[600px] h-[600px] wheel-container cursor-grab active:cursor-grabbing select-none"
+          class="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] xl:w-[600px] xl:h-[600px] wheel-container cursor-grab active:cursor-grabbing select-none"
           @mousedown="onMouseDown"
         >
           <!-- Pointer -->
-          <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-20">
-            <div class="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[40px] border-t-red-500 drop-shadow-lg"></div>
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 sm:-translate-y-3 md:-translate-y-4 z-20">
+            <div class="w-0 h-0 border-l-[12px] sm:border-l-[16px] md:border-l-[20px] border-l-transparent border-r-[12px] sm:border-r-[16px] md:border-r-[20px] border-r-transparent border-t-[24px] sm:border-t-[32px] md:border-t-[40px] border-t-red-500 drop-shadow-lg"></div>
           </div>
 
           <!-- Wheel Circle -->
@@ -310,8 +353,8 @@ if (typeof window !== 'undefined') {
                     :href="prize.image"
                     :x="getImageX(index, prizes.length)"
                     :y="getImageY(index, prizes.length)"
-                    width="12"
-                    height="12"
+                    :width="wheelConfig.fontSize * 2.4"
+                    :height="wheelConfig.fontSize * 2.4"
                     :transform="getTextTransform(index, prizes.length)"
                     :clip-path="`url(#clip-${prize.id})`"
                   />
@@ -320,7 +363,7 @@ if (typeof window !== 'undefined') {
                     :x="getTextX(index, prizes.length)"
                     :y="getTextY(index, prizes.length)"
                     :transform="getTextTransform(index, prizes.length)"
-                    :font-size="prize.price === 4500 ? '6' : '5'"
+                    :font-size="prize.price === 4500 ? wheelConfig.legendaryFontSize : wheelConfig.fontSize"
                     font-weight="bold"
                     :fill="prize.price === 4500 ? '#FFFEF0' : 'white'"
                     text-anchor="middle"
@@ -350,14 +393,19 @@ if (typeof window !== 'undefined') {
                     <img
                       :src="prize.image"
                       :alt="prize.name"
-                      class="w-12 h-12 object-cover rounded-lg"
-                      :style="prize.price === 4500
-                        ? 'box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);'
-                        : 'box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 2px rgba(0, 0, 0, 0.2);'"
+                      class="object-cover rounded-lg"
+                      :style="{
+                        width: `${wheelConfig.imageSize}px`,
+                        height: `${wheelConfig.imageSize}px`,
+                        boxShadow: prize.price === 4500
+                          ? '0 0 15px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3)'
+                          : '0 2px 8px rgba(0, 0, 0, 0.3), 0 0 2px rgba(0, 0, 0, 0.2)'
+                      }"
                     />
                     <div
                       v-if="prize.price === 4500"
-                      class="absolute -top-2 -right-2 text-2xl"
+                      class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2"
+                      :style="{ fontSize: `${wheelConfig.imageSize * 0.5}px` }"
                     >
                       👑
                     </div>
@@ -372,7 +420,7 @@ if (typeof window !== 'undefined') {
             <button
               @click="spinWheel"
               :disabled="isSpinning"
-              class="w-24 h-24 rounded-full bg-gradient-to-br from-red-500 to-pink-600 text-white font-bold text-lg shadow-2xl transform transition-all duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed border-4 border-white"
+              class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-red-500 to-pink-600 text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg shadow-2xl transform transition-all duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed border-2 sm:border-3 md:border-4 border-white"
             >
               {{ isSpinning ? 'QUAY!' : 'QUAY' }}
             </button>
@@ -381,17 +429,17 @@ if (typeof window !== 'undefined') {
       </div>
 
       <!-- Prize List -->
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-xl">
-        <h2 class="text-2xl font-bold text-white mb-2 text-center">Danh Sách Phần Thưởng</h2>
-        <p class="text-center text-purple-200 text-xs mb-4 opacity-70">
+      <div class="bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 shadow-xl">
+        <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-center">Danh Sách Phần Thưởng</h2>
+        <p class="text-center text-purple-200 text-[10px] sm:text-xs mb-3 sm:mb-4 opacity-70">
           * Giá vàng chỉ mang tính chất tham khảo
         </p>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
           <div
             v-for="prize in sortedPrizes"
             :key="prize.id"
             :class="[
-              'rounded-lg p-3 text-center transition-all duration-300',
+              'rounded-md sm:rounded-lg p-2 sm:p-3 text-center transition-all duration-300',
               prize.price === 4500
                 ? 'legendary-prize bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 shadow-2xl transform hover:scale-105'
                 : 'bg-white/20 backdrop-blur-sm hover:bg-white/30'
@@ -399,27 +447,27 @@ if (typeof window !== 'undefined') {
           >
             <div
               :class="[
-                'w-16 h-16 mx-auto mb-2 relative',
+                'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-1 sm:mb-2 relative',
                 prize.price === 4500 ? 'legendary-icon' : ''
               ]"
             >
               <img
                 :src="prize.image"
                 :alt="prize.name"
-                class="w-full h-full object-cover rounded-lg shadow-md"
-                :class="prize.price === 4500 ? 'border-2 border-yellow-300' : ''"
+                class="w-full h-full object-cover rounded-md sm:rounded-lg shadow-md"
+                :class="prize.price === 4500 ? 'border border-yellow-300 sm:border-2' : ''"
               />
               <div
                 v-if="prize.price === 4500"
-                class="absolute -top-2 -right-2 text-2xl"
+                class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 text-base sm:text-xl md:text-2xl"
               >
                 👑
               </div>
             </div>
-            <p :class="prize.price === 4500 ? 'text-white font-black text-sm mb-1 drop-shadow-lg' : 'text-white font-semibold text-sm mb-1'">
+            <p :class="prize.price === 4500 ? 'text-white font-black text-[10px] sm:text-xs md:text-sm mb-0.5 sm:mb-1 drop-shadow-lg' : 'text-white font-semibold text-[10px] sm:text-xs md:text-sm mb-0.5 sm:mb-1'">
               {{ prize.name }}
             </p>
-            <p :class="prize.price === 4500 ? 'text-white text-xs font-black drop-shadow-lg' : 'text-yellow-300 text-xs font-bold'">
+            <p :class="prize.price === 4500 ? 'text-white text-[9px] sm:text-[10px] md:text-xs font-black drop-shadow-lg' : 'text-yellow-300 text-[9px] sm:text-[10px] md:text-xs font-bold'">
               {{ prize.price }} vàng
             </p>
           </div>
@@ -427,9 +475,9 @@ if (typeof window !== 'undefined') {
       </div>
 
       <!-- Footer -->
-      <div class="text-center mt-12 pt-8 border-t border-white/10">
-        <p class="text-purple-200 text-base">
-          Developed by <span class="text-white font-semibold">Mr. Giang</span> - <a href="mailto:nhgiang.dev@gmail.com" class="text-yellow-300 hover:text-yellow-200 transition-colors font-semibold">nhgiang.dev@gmail.com</a>
+      <div class="text-center mt-6 sm:mt-8 md:mt-12 pt-4 sm:pt-6 md:pt-8 border-t border-white/10">
+        <p class="text-purple-200 text-xs sm:text-sm md:text-base px-4">
+          Developed by <span class="text-white font-semibold">Mr. Giang</span> - <a href="mailto:nhgiang.dev@gmail.com" class="text-yellow-300 hover:text-yellow-200 transition-colors font-semibold break-all sm:break-normal">nhgiang.dev@gmail.com</a>
         </p>
       </div>
     </div>
@@ -437,44 +485,44 @@ if (typeof window !== 'undefined') {
     <!-- Result Modal -->
     <div
       v-if="showResult && currentPrize"
-      class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4"
       @click="closeResult"
     >
       <div
-        class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-3xl p-8 max-w-md w-full shadow-2xl transform animate-bounce-in"
+        class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 max-w-sm sm:max-w-md w-full shadow-2xl transform animate-bounce-in"
         @click.stop
       >
         <div class="text-center">
-          <div class="text-6xl mb-4">🎉</div>
-          <h2 class="text-3xl font-bold text-white mb-2">Chúc Mừng!</h2>
-          <p class="text-xl text-purple-100 mb-4">Bạn đã trúng:</p>
+          <div class="text-4xl sm:text-5xl md:text-6xl mb-3 sm:mb-4">🎉</div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">Chúc Mừng!</h2>
+          <p class="text-base sm:text-lg md:text-xl text-purple-100 mb-3 sm:mb-4">Bạn đã trúng:</p>
 
-          <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 mb-6">
-            <div class="w-32 h-32 mx-auto mb-4 relative">
+          <div class="bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 mb-4 sm:mb-5 md:mb-6">
+            <div class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto mb-3 sm:mb-4 relative">
               <img
                 :src="currentPrize.image"
                 :alt="currentPrize.name"
-                class="w-full h-full object-cover rounded-xl shadow-2xl"
-                :class="currentPrize.price === 4500 ? 'border-4 border-yellow-300' : ''"
+                class="w-full h-full object-cover rounded-lg sm:rounded-xl shadow-2xl"
+                :class="currentPrize.price === 4500 ? 'border-2 sm:border-3 md:border-4 border-yellow-300' : ''"
               />
               <div
                 v-if="currentPrize.price === 4500"
-                class="absolute -top-3 -right-3 text-5xl animate-bounce"
+                class="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 text-3xl sm:text-4xl md:text-5xl animate-bounce"
               >
                 👑
               </div>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2">{{ currentPrize.name }}</h3>
-            <p class="text-3xl font-bold text-yellow-300">{{ currentPrize.price }} vàng</p>
+            <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">{{ currentPrize.name }}</h3>
+            <p class="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-300">{{ currentPrize.price }} vàng</p>
           </div>
 
-          <p class="text-purple-100 text-sm mb-4 opacity-80">
+          <p class="text-purple-100 text-xs sm:text-sm mb-3 sm:mb-4 opacity-80 px-2">
             * Hiện tại đang thử nghiệm nên kết quả này sẽ không được lưu lại
           </p>
 
           <button
             @click="closeResult"
-            class="bg-white text-purple-600 font-bold py-3 px-8 rounded-full hover:bg-purple-100 transition-colors shadow-lg"
+            class="bg-white text-purple-600 font-bold py-2 px-6 sm:py-2.5 sm:px-7 md:py-3 md:px-8 text-sm sm:text-base rounded-full hover:bg-purple-100 transition-colors shadow-lg"
           >
             Đóng
           </button>
