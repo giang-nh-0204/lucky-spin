@@ -92,12 +92,13 @@ const wheelSize = computed(() => {
 
 const wheelConfig = computed(() => {
   const size = wheelSize.value
+  const w = windowWidth.value // Sử dụng windowWidth để responsive
   const padding = 16 // p-4 = 16px
   const innerSize = size - padding * 2
   const center = innerSize / 2
   const radius = center * 0.86 // ~86% of center for image placement
-  const imageSize = size < 640 ? 32 : size < 768 ? 36 : size < 1024 ? 40 : 48 // responsive image size
-  const fontSize = size < 640 ? 3.5 : size < 768 ? 4 : size < 1024 ? 4.5 : 5 // SVG text font size
+  const imageSize = w < 640 ? 32 : w < 768 ? 36 : w < 1024 ? 40 : 48 // responsive image size
+  const fontSize = w < 640 ? 3.5 : w < 768 ? 4 : w < 1024 ? 4.5 : 5 // SVG text font size
   const legendaryFontSize = fontSize * 1.2
   return { size, center, radius, imageSize, fontSize, legendaryFontSize }
 })
