@@ -62,8 +62,10 @@ class SpinService
 
     /**
      * Bắt đầu quay (xác định kết quả tại server)
+     * @param SpinSession $session
+     * @param float $currentRotation - Góc quay hiện tại của wheel (0-360)
      */
-    public function startSpin(SpinSession $session): array
+    public function startSpin(SpinSession $session, float $currentRotation = 0): array
     {
         if (!$session->isValid()) {
             throw new SpinException('Phiên đã hết hạn', 401);
@@ -80,12 +82,12 @@ class SpinService
             throw new SpinException('Không có giải thưởng', 500);
         }
 
-        return DB::transaction(function () use ($session, $prizes) {
+        return DB::transaction(function () use ($session, $prizes, $currentRotation) {
             // 1. Chọn giải theo xác suất
             $prize = $this->selectPrizeByProbability($prizes);
 
-            // 2. Tính góc quay
-            $targetAngle = $this->calculateTargetAngle($prize, $prizes);
+            // 2. Tính góc quay (có tính đến vị trí hiện tại)
+            $targetAngle = $this->calculateTargetAngle($prize, $prizes, $currentRotation);
 
             // 3. Tạo spin token
             $spinToken = Str::random(64);
@@ -190,9 +192,16 @@ class SpinService
 
     /**
      * Tính góc quay để kim chỉ đúng vào prize
-     * Công thức giống frontend: 360 - (index * angle + angle/2 + offset)
+     * Công thức giống frontend demo mode:
+     * - targetAngle = 360 - (index * angle + angle/2 + offset)
+     * - deltaAngle = targetAngle - currentRotation
+     * - spinRotation = 7 vòng + deltaAngle
+     *
+     * @param Prize $selectedPrize - Giải được chọn
+     * @param Collection $prizes - Danh sách giải
+     * @param float $currentRotation - Góc quay hiện tại của wheel (0-360)
      */
-    private function calculateTargetAngle(Prize $selectedPrize, $prizes): float
+    private function calculateTargetAngle(Prize $selectedPrize, $prizes, float $currentRotation = 0): float
     {
         $prizeCount = $prizes->count();
         $segmentAngle = 360 / $prizeCount;
@@ -204,18 +213,30 @@ class SpinService
         // Thêm offset ngẫu nhiên trong segment (±30%)
         $offset = (mt_rand(-30, 30) / 100) * $segmentAngle;
 
-        // Góc để kim chỉ vào giữa segment
+        // Góc để kim chỉ vào giữa segment (vị trí tuyệt đối)
         // Công thức giống frontend: 360 - (index * angle + angle/2 + offset)
-        $targetAngle = 360 - ($prizeIndex * $segmentAngle + $segmentAngle / 2 + $offset);
+        $absoluteTargetAngle = 360 - ($prizeIndex * $segmentAngle + $segmentAngle / 2 + $offset);
 
         // Normalize về 0-360
-        while ($targetAngle < 0) {
-            $targetAngle += 360;
+        while ($absoluteTargetAngle < 0) {
+            $absoluteTargetAngle += 360;
+        }
+        while ($absoluteTargetAngle >= 360) {
+            $absoluteTargetAngle -= 360;
         }
 
-        // Tổng góc = nhiều vòng quay + góc đích
+        // Tính delta: góc cần quay từ vị trí hiện tại đến vị trí đích
+        // Giống frontend: deltaAngle = targetAngle - currentRotation
+        $deltaAngle = $absoluteTargetAngle - $currentRotation;
+
+        // Nếu delta âm, cộng thêm 360 để quay theo chiều dương
+        if ($deltaAngle < 0) {
+            $deltaAngle += 360;
+        }
+
+        // Tổng góc = nhiều vòng quay + delta
         $totalRotations = self::MIN_ROTATIONS * 360;
 
-        return $totalRotations + $targetAngle;
+        return $totalRotations + $deltaAngle;
     }
 }
