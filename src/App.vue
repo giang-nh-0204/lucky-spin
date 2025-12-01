@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import LuckyWheel from './components/LuckyWheel.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <LuckyWheel />
+  <RouterView />
 </template>
 
 <style scoped></style>
