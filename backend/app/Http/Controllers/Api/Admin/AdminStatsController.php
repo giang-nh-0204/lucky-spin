@@ -65,7 +65,11 @@ class AdminStatsController extends Controller
      */
     public function results(Request $request): JsonResponse
     {
-        $query = SpinResult::with(['session:id,ip_address', 'prize:id,name,price,image']);
+        $query = SpinResult::with([
+            'session:id,ip_address,code_id',
+            'session.code:id,code',
+            'prize:id,name,price,image'
+        ]);
 
         // Filter by date range
         if ($request->filled('from')) {
@@ -85,11 +89,72 @@ class AdminStatsController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Search by code
+        if ($request->filled('code')) {
+            $code = strtoupper(trim($request->code));
+            $query->whereHas('session.code', function ($q) use ($code) {
+                $q->where('code', 'LIKE', "%{$code}%");
+            });
+        }
+
+        // Filter by delivery status
+        if ($request->filled('delivery_status')) {
+            $query->where('delivery_status', $request->delivery_status);
+        }
+
         $results = $query->orderByDesc('created_at')->paginate(50);
 
         return response()->json([
             'success' => true,
             'data' => $results,
+        ]);
+    }
+
+    /**
+     * Cập nhật trạng thái giao hàng
+     */
+    public function updateDeliveryStatus(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'delivery_status' => 'required|in:pending,delivered',
+            'delivery_note' => 'nullable|string|max:500',
+        ]);
+
+        $result = SpinResult::findOrFail($id);
+
+        if ($request->delivery_status === 'delivered') {
+            $result->markAsDelivered($request->delivery_note);
+        } else {
+            $result->markAsUndelivered($request->delivery_note);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $result->fresh(['session:id,ip_address,code_id', 'session.code:id,code', 'prize:id,name,price,image']),
+        ]);
+    }
+
+    /**
+     * Cập nhật hàng loạt trạng thái giao hàng
+     */
+    public function bulkUpdateDeliveryStatus(Request $request): JsonResponse
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:spin_results,id',
+            'delivery_status' => 'required|in:pending,delivered',
+            'delivery_note' => 'nullable|string|max:500',
+        ]);
+
+        $count = SpinResult::whereIn('id', $request->ids)->update([
+            'delivery_status' => $request->delivery_status,
+            'delivery_note' => $request->delivery_note,
+            'delivered_at' => $request->delivery_status === 'delivered' ? now() : null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => ['updated_count' => $count],
         ]);
     }
 

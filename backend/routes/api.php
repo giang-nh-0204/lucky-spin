@@ -64,4 +64,8 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function ()
     Route::get('/stats', [AdminStatsController::class, 'index']);
     Route::get('/stats/results', [AdminStatsController::class, 'results']);
     Route::get('/stats/codes', [AdminStatsController::class, 'codeUsage']);
+
+    // Cập nhật trạng thái giao hàng
+    Route::put('/results/{id}/delivery', [AdminStatsController::class, 'updateDeliveryStatus']);
+    Route::post('/results/bulk-delivery', [AdminStatsController::class, 'bulkUpdateDeliveryStatus']);
 });

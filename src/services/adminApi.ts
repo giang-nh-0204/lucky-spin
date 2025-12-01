@@ -93,9 +93,16 @@ export interface SpinResult {
   spin_token: string
   target_angle: number
   status: 'pending' | 'claimed' | 'expired'
+  delivery_status: 'pending' | 'delivered'
+  delivery_note: string | null
+  delivered_at: string | null
   created_at: string
   claimed_at: string | null
-  session: { id: number; ip_address: string }
+  session: {
+    id: number
+    ip_address: string
+    code?: { id: number; code: string }
+  }
   prize: { id: number; name: string; price: number; image: string; image_url: string }
 }
 
@@ -209,6 +216,8 @@ export const adminApi = {
     status?: string
     from?: string
     to?: string
+    code?: string
+    delivery_status?: string
   }): Promise<{ data: SpinResult[]; meta: any }> {
     const query = new URLSearchParams()
     if (params?.page) query.set('page', String(params.page))
@@ -216,9 +225,42 @@ export const adminApi = {
     if (params?.status) query.set('status', params.status)
     if (params?.from) query.set('from', params.from)
     if (params?.to) query.set('to', params.to)
+    if (params?.code) query.set('code', params.code)
+    if (params?.delivery_status) query.set('delivery_status', params.delivery_status)
 
     const res = await request<{ success: boolean; data: { data: SpinResult[]; meta: any } }>(
       `/admin/stats/results?${query}`
+    )
+    return res.data
+  },
+
+  // Update delivery status
+  async updateDeliveryStatus(
+    id: number,
+    data: { delivery_status: 'pending' | 'delivered'; delivery_note?: string }
+  ): Promise<SpinResult> {
+    const res = await request<{ success: boolean; data: SpinResult }>(
+      `/admin/results/${id}/delivery`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }
+    )
+    return res.data
+  },
+
+  // Bulk update delivery status
+  async bulkUpdateDeliveryStatus(data: {
+    ids: number[]
+    delivery_status: 'pending' | 'delivered'
+    delivery_note?: string
+  }): Promise<{ updated_count: number }> {
+    const res = await request<{ success: boolean; data: { updated_count: number } }>(
+      '/admin/results/bulk-delivery',
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }
     )
     return res.data
   },

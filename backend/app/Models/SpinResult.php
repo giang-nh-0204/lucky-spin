@@ -14,11 +14,15 @@ class SpinResult extends Model
         'target_angle',
         'status',
         'claimed_at',
+        'delivery_status',
+        'delivery_note',
+        'delivered_at',
     ];
 
     protected $casts = [
         'target_angle' => 'decimal:2',
         'claimed_at' => 'datetime',
+        'delivered_at' => 'datetime',
     ];
 
     public function session(): BelongsTo
@@ -56,5 +60,29 @@ class SpinResult extends Model
     public function markAsExpired(): void
     {
         $this->update(['status' => 'expired']);
+    }
+
+    /**
+     * Đánh dấu đã gửi quà
+     */
+    public function markAsDelivered(?string $note = null): void
+    {
+        $this->update([
+            'delivery_status' => 'delivered',
+            'delivery_note' => $note,
+            'delivered_at' => now(),
+        ]);
+    }
+
+    /**
+     * Đánh dấu chưa gửi quà
+     */
+    public function markAsUndelivered(?string $note = null): void
+    {
+        $this->update([
+            'delivery_status' => 'pending',
+            'delivery_note' => $note,
+            'delivered_at' => null,
+        ]);
     }
 }

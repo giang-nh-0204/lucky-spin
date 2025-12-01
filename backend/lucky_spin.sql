@@ -164,7 +164,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,7 +173,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2024_01_01_000000_add_is_admin_to_users_table',1),(5,'2024_01_01_000001_create_prizes_table',1),(6,'2024_01_01_000002_create_spin_codes_table',1),(7,'2024_01_01_000003_create_spin_sessions_table',1),(8,'2024_01_01_000004_create_spin_results_table',1),(9,'2025_12_01_104146_create_personal_access_tokens_table',1);
+INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2024_01_01_000000_add_is_admin_to_users_table',1),(5,'2024_01_01_000001_create_prizes_table',1),(6,'2024_01_01_000002_create_spin_codes_table',1),(7,'2024_01_01_000003_create_spin_sessions_table',1),(8,'2024_01_01_000004_create_spin_results_table',1),(9,'2025_12_01_104146_create_personal_access_tokens_table',1),(10,'2025_12_01_200000_add_delivery_status_to_spin_results_table',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +232,7 @@ CREATE TABLE `personal_access_tokens` (
 
 LOCK TABLES `personal_access_tokens` WRITE;
 /*!40000 ALTER TABLE `personal_access_tokens` DISABLE KEYS */;
-INSERT INTO `personal_access_tokens` VALUES (1,'App\\Models\\User',2,'admin-token','b67e8d6123cdf45edd5f445b1011256c8d5daddf9d6410619650fb0c7422c18d','[\"*\"]','2025-12-01 04:11:15',NULL,'2025-12-01 03:49:09','2025-12-01 04:11:15');
+INSERT INTO `personal_access_tokens` VALUES (1,'App\\Models\\User',2,'admin-token','4a7ca73853d67defcb0ba39732f99bb31caa2ae793e5765a5943a94fd0e66c50','[\"*\"]','2025-12-01 05:06:26',NULL,'2025-12-01 05:05:02','2025-12-01 05:06:26');
 /*!40000 ALTER TABLE `personal_access_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -265,7 +265,7 @@ CREATE TABLE `prizes` (
 
 LOCK TABLES `prizes` WRITE;
 /*!40000 ALTER TABLE `prizes` DISABLE KEYS */;
-INSERT INTO `prizes` VALUES (1,'Cao băng bạo',120,'images/cao-bang-bao.jpg','#FF6B6B',0.1200,1,NULL,0,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(2,'Cao bí hựu',200,'images/cao-bi-huu.jpg','#4ECDC4',0.0900,1,NULL,1,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(3,'Cao di hồn',100,'images/cao-di-hon.jpg','#45B7D1',0.1200,1,NULL,2,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(4,'Cao huyết bạo',750,'images/cao-huyet-bao.jpg','#F7DC6F',0.0200,1,NULL,3,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(5,'Cao linh đông',500,'images/cao-linh-dong.jpg','#BB8FCE',0.0300,1,NULL,4,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(6,'Cao mãnh kích',750,'images/cao-manh-kich.jpg','#85C1E2',0.0200,1,NULL,5,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(7,'Cao ngưng thần',450,'images/cao-ngung-than.jpg','#F8B739',0.0400,1,NULL,6,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(8,'Cao cường thân',450,'images/cao-cuong-than.jpg','#52C469',0.0400,1,NULL,7,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(9,'Cao phản chấn',300,'images/cao-phan-chan.jpg','#FF8C94',0.0600,1,NULL,8,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(10,'Cao phản kích',300,'images/cao-phan-kich.jpg','#A8E6CF',0.0600,1,NULL,9,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(11,'Cao phụ thân',150,'images/cao-phu-than.jpg','#FFD3B6',0.1000,1,NULL,10,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(12,'Cao tá lực',150,'images/cao-ta-luc.jpg','#FFAAA5',0.1000,1,NULL,11,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(13,'Cao thế sát',600,'images/cao-the-sat.jpg','#FF8B94',0.0250,1,NULL,12,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(14,'Cao thị huyết',100,'images/cao-thi-huyet.jpg','#A8D8EA',0.1200,1,NULL,13,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(15,'Cao thuấn ảnh',400,'images/cao-thuan-anh.jpg','#AA96DA',0.0500,1,NULL,14,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(16,'Cao nội lực',600,'images/cao-noi-luc.jpg','#FCBAD3',0.0250,1,NULL,15,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(17,'Cao cộng sinh',300,'images/cao-cong-sinh.jpg','#FFFFD2',0.0600,1,NULL,16,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(18,'Cao nhục tường',100,'images/cao-nhuc-tuong.jpg','#A0CED9',0.1200,1,NULL,17,'2025-12-01 03:48:07','2025-12-01 03:48:07'),(19,'Cao Huyết tế',4500,'images/cao-huyet-te.jpg','#FFC09F',0.0010,1,NULL,18,'2025-12-01 03:48:07','2025-12-01 03:48:07');
+INSERT INTO `prizes` VALUES (1,'Cao băng bạo',120,'/images/cao-bang-bao.jpg','#FF6B6B',0.1200,1,NULL,0,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(2,'Cao bí hựu',200,'/images/cao-bi-huu.jpg','#4ECDC4',0.0900,1,NULL,1,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(3,'Cao di hồn',100,'/images/cao-di-hon.jpg','#45B7D1',0.1200,1,NULL,2,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(4,'Cao huyết bạo',750,'/images/cao-huyet-bao.jpg','#F7DC6F',0.0200,1,NULL,3,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(5,'Cao linh đông',500,'/images/cao-linh-dong.jpg','#BB8FCE',0.0300,1,NULL,4,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(6,'Cao mãnh kích',750,'/images/cao-manh-kich.jpg','#85C1E2',0.0200,1,NULL,5,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(7,'Cao ngưng thần',450,'/images/cao-ngung-than.jpg','#F8B739',0.0400,1,NULL,6,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(8,'Cao cường thân',450,'/images/cao-cuong-than.jpg','#52C469',0.0400,1,NULL,7,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(9,'Cao phản chấn',300,'/images/cao-phan-chan.jpg','#FF8C94',0.0600,1,NULL,8,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(10,'Cao phản kích',300,'/images/cao-phan-kich.jpg','#A8E6CF',0.0600,1,NULL,9,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(11,'Cao phụ thân',150,'/images/cao-phu-than.jpg','#FFD3B6',0.1000,1,NULL,10,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(12,'Cao tá lực',150,'/images/cao-ta-luc.jpg','#FFAAA5',0.1000,1,NULL,11,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(13,'Cao thế sát',600,'/images/cao-the-sat.jpg','#FF8B94',0.0250,1,NULL,12,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(14,'Cao thị huyết',100,'/images/cao-thi-huyet.jpg','#A8D8EA',0.1200,1,NULL,13,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(15,'Cao thuấn ảnh',400,'/images/cao-thuan-anh.jpg','#AA96DA',0.0500,1,NULL,14,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(16,'Cao nội lực',600,'/images/cao-noi-luc.jpg','#FCBAD3',0.0250,1,NULL,15,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(17,'Cao cộng sinh',300,'/images/cao-cong-sinh.jpg','#FFFFD2',0.0600,1,NULL,16,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(18,'Cao nhục tường',100,'/images/cao-nhuc-tuong.jpg','#A0CED9',0.1200,1,NULL,17,'2025-12-01 05:06:12','2025-12-01 05:06:12'),(19,'Cao Huyết tế',4500,'/images/cao-huyet-te.jpg','#FFC09F',0.0010,1,NULL,18,'2025-12-01 05:06:12','2025-12-01 05:06:12');
 /*!40000 ALTER TABLE `prizes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,7 +319,7 @@ CREATE TABLE `spin_codes` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `spin_codes_code_unique` (`code`),
   KEY `spin_codes_code_is_active_index` (`code`,`is_active`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -328,7 +328,6 @@ CREATE TABLE `spin_codes` (
 
 LOCK TABLES `spin_codes` WRITE;
 /*!40000 ALTER TABLE `spin_codes` DISABLE KEYS */;
-INSERT INTO `spin_codes` VALUES (1,'SOTPI7YJXN',5,1,1,NULL,NULL,1,'2025-12-01 04:02:54','2025-12-01 04:06:19');
 /*!40000 ALTER TABLE `spin_codes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,6 +345,9 @@ CREATE TABLE `spin_results` (
   `spin_token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `target_angle` decimal(8,2) NOT NULL,
   `status` enum('pending','claimed','expired') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `delivery_status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `delivery_note` text COLLATE utf8mb4_unicode_ci,
+  `delivered_at` timestamp NULL DEFAULT NULL,
   `claimed_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -356,7 +358,7 @@ CREATE TABLE `spin_results` (
   KEY `spin_results_session_id_status_index` (`session_id`,`status`),
   CONSTRAINT `spin_results_prize_id_foreign` FOREIGN KEY (`prize_id`) REFERENCES `prizes` (`id`),
   CONSTRAINT `spin_results_session_id_foreign` FOREIGN KEY (`session_id`) REFERENCES `spin_sessions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -365,7 +367,6 @@ CREATE TABLE `spin_results` (
 
 LOCK TABLES `spin_results` WRITE;
 /*!40000 ALTER TABLE `spin_results` DISABLE KEYS */;
-INSERT INTO `spin_results` VALUES (1,1,1,'EzXGsDZ46rO7mPf58SEJmJcf69lpF93rLAwyUpFfGQVIAWuzpiVSIvcuJOkAvjcr',2534.02,'claimed','2025-12-01 04:10:59','2025-12-01 04:10:50','2025-12-01 04:10:59'),(2,1,9,'IWD3TryrWeQeljqym06yReNvVH3TgauJcxp9SpZsXExNPO9noUsJ2IRHvS5dzopg',2677.45,'claimed','2025-12-01 04:15:58','2025-12-01 04:15:50','2025-12-01 04:15:58'),(3,1,16,'2Mpq1SVDQoVBmP1OM2BZqXDz98xKp0GSHmdQivTTf3N1L2nGtseH60bcV7oab7aQ',2818.04,'claimed','2025-12-01 04:16:17','2025-12-01 04:16:09','2025-12-01 04:16:17'),(4,1,17,'feYsbGuc7ehybaHnFjvxKc3kPdGyzw36a9Un5c7PeXQBsCbsPtlNfA1DEBCJi36g',2565.66,'claimed','2025-12-01 04:21:10','2025-12-01 04:21:01','2025-12-01 04:21:10'),(5,1,12,'wEo4QP8l2u8W8Vx8ZyxkdKRr77hC73RrVNzIFiZIYE5yCVkXgAUGbPd8RrgpCiMh',2665.71,'claimed','2025-12-01 04:21:31','2025-12-01 04:21:22','2025-12-01 04:21:31');
 /*!40000 ALTER TABLE `spin_results` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -394,7 +395,7 @@ CREATE TABLE `spin_sessions` (
   KEY `spin_sessions_session_token_index` (`session_token`),
   KEY `spin_sessions_expires_at_index` (`expires_at`),
   CONSTRAINT `spin_sessions_code_id_foreign` FOREIGN KEY (`code_id`) REFERENCES `spin_codes` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -403,7 +404,6 @@ CREATE TABLE `spin_sessions` (
 
 LOCK TABLES `spin_sessions` WRITE;
 /*!40000 ALTER TABLE `spin_sessions` DISABLE KEYS */;
-INSERT INTO `spin_sessions` VALUES (1,'HIIT9Vv1PpVoyJ8GOHl4RMc575MfWMYRgktvVlb7RtdrIprhgp1HmqJGYBZsIpQl',1,0,5,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0','2025-12-08 04:06:19','2025-12-01 04:21:22','2025-12-01 04:06:19','2025-12-01 04:21:22');
 /*!40000 ALTER TABLE `spin_sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -435,7 +435,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Test User','test@example.com','2025-12-01 03:47:47','$2y$12$EFwdkPQk8lYUpMQSiA6pLuMQtMRiHV4AB.eNtQwce4Gj1UQMSz5BW','BcY6Xfi8tA',0,'2025-12-01 03:47:47','2025-12-01 03:47:47'),(2,'Admin','admin@example.com',NULL,'$2y$12$BqwJB2uciwO1GXdi/68PrOURwoJ8VdZkRoiuIBeZxsJtP/keevnn2',NULL,1,'2025-12-01 03:48:28','2025-12-01 03:48:28');
+INSERT INTO `users` VALUES (1,'Test User','test@example.com','2025-12-01 05:05:42','$2y$12$DKmpOdaUVavaL6gsmkvyO.UYp0IVtTvXVwuyWp/gUp6XISfwjgNxq','srYV9Xhb06',0,'2025-12-01 05:05:42','2025-12-01 05:05:42'),(2,'Admin','admin@example.com',NULL,'$2y$12$n64Pquj2lVpv4nMR0ZmlKuA3ikO1lIddcyvJ.wSCribKVF/XWMpca',NULL,1,'2025-12-01 05:05:53','2025-12-01 05:05:53');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -448,4 +448,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-12-01 18:22:19
+-- Dump completed on 2025-12-01 19:07:06
