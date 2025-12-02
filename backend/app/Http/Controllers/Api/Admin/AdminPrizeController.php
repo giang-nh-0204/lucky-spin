@@ -128,4 +128,59 @@ class AdminPrizeController extends Controller
             'message' => 'Đã sắp xếp lại',
         ]);
     }
+
+    /**
+     * Tự động phân phối xác suất theo giá vàng (giá cao = xác suất thấp)
+     */
+    public function autoDistributeProbability(): JsonResponse
+    {
+        // Lấy các giải đang active và còn stock
+        $prizes = Prize::where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('stock')->orWhere('stock', '>', 0);
+            })
+            ->orderBy('price', 'desc')
+            ->get();
+
+        if ($prizes->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không có giải thưởng nào đủ điều kiện',
+            ], 400);
+        }
+
+        // Tính tổng nghịch đảo giá (1/price) để làm trọng số
+        $totalInversePrice = $prizes->sum(fn($p) => 1 / max($p->price, 1));
+
+        // Phân phối xác suất: giải giá thấp = xác suất cao
+        foreach ($prizes as $prize) {
+            $inversePrice = 1 / max($prize->price, 1);
+            $probability = round($inversePrice / $totalInversePrice, 4);
+
+            // Đảm bảo xác suất tối thiểu 0.0001
+            $probability = max($probability, 0.0001);
+
+            $prize->update(['probability' => $probability]);
+        }
+
+        // Normalize lại để tổng = 1
+        $prizes->fresh();
+        $total = Prize::where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('stock')->orWhere('stock', '>', 0);
+            })
+            ->sum('probability');
+
+        if ($total > 0 && $total != 1) {
+            foreach ($prizes as $prize) {
+                $normalized = round($prize->probability / $total, 4);
+                $prize->update(['probability' => max($normalized, 0.0001)]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đã phân phối xác suất theo giá vàng',
+        ]);
+    }
 }

@@ -49,6 +49,16 @@ const logout = () => {
   spinBalance.value = 0
   isRealMode.value = false
 }
+
+// Paste from clipboard
+const pasteCode = async () => {
+  try {
+    const text = await navigator.clipboard.readText()
+    codeInput.value = text.trim().toUpperCase()
+  } catch {
+    // Clipboard access denied - ignore
+  }
+}
 </script>
 
 <template>
@@ -121,14 +131,24 @@ const logout = () => {
           </p>
 
           <form @submit.prevent="redeemCode">
-            <input
-              v-model="codeInput"
-              type="text"
-              placeholder="VD: LUCKY2024"
-              class="w-full px-4 py-3 rounded-xl bg-purple-800/50 border-2 border-purple-500/50 text-white text-center text-lg sm:text-xl font-bold uppercase tracking-widest placeholder-purple-400 focus:border-yellow-400 focus:outline-none"
-              :disabled="codeLoading"
-              autofocus
-            />
+            <div class="relative">
+              <input
+                v-model="codeInput"
+                type="text"
+                placeholder="VD: LUCKY2024"
+                class="w-full px-4 py-3 pr-20 rounded-xl bg-purple-800/50 border-2 border-purple-500/50 text-white text-center text-lg sm:text-xl font-bold uppercase tracking-widest placeholder-purple-400 focus:border-yellow-400 focus:outline-none"
+                :disabled="codeLoading"
+                autofocus
+              />
+              <button
+                type="button"
+                @click="pasteCode"
+                class="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-medium rounded-lg transition-colors"
+                :disabled="codeLoading"
+              >
+                📋 Dán
+              </button>
+            </div>
 
             <p v-if="codeError" class="mt-3 text-red-400 text-center text-sm">
               {{ codeError }}

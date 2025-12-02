@@ -141,6 +141,7 @@ class SpinService
                 'name' => $result->prize->name,
                 'price' => $result->prize->price,
                 'image' => $result->prize->image,
+                'image_url' => $result->prize->image_url,
                 'color' => $result->prize->color,
             ],
         ];
@@ -163,6 +164,7 @@ class SpinService
                 'name' => $r->prize->name,
                 'price' => $r->prize->price,
                 'image' => $r->prize->image,
+                'image_url' => $r->prize->image_url,
             ],
             'claimed_at' => $r->claimed_at->toIso8601String(),
         ])->toArray();

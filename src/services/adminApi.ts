@@ -209,6 +209,13 @@ export const adminApi = {
     await request(`/admin/prizes/${id}`, { method: 'DELETE' })
   },
 
+  async autoProbability(): Promise<{ message: string }> {
+    const res = await request<{ success: boolean; message: string }>('/admin/prizes/auto-probability', {
+      method: 'POST',
+    })
+    return { message: res.message }
+  },
+
   // Results
   async getResults(params?: {
     page?: number

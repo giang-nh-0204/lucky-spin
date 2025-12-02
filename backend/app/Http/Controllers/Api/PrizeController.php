@@ -16,7 +16,7 @@ class PrizeController extends Controller
     {
         $prizes = Prize::available()
             ->orderBy('sort_order')
-            ->get(['id', 'name', 'price', 'image', 'color']);
+            ->get(['id', 'name', 'price', 'image', 'color', 'stock']);
 
         return response()->json([
             'success' => true,

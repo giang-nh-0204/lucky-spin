@@ -5,6 +5,7 @@ import adminApi, { type Prize } from '@/services/adminApi'
 const prizes = ref<Prize[]>([])
 const loading = ref(true)
 const error = ref('')
+const autoLoading = ref(false)
 
 // Modal
 const showModal = ref(false)
@@ -102,36 +103,61 @@ const deletePrize = async (prize: Prize) => {
   }
 }
 
+const autoProbability = async () => {
+  if (!confirm('Tự động phân phối xác suất theo giá vàng?\n(Giá cao = xác suất thấp)')) return
+  autoLoading.value = true
+  try {
+    await adminApi.autoProbability()
+    await loadPrizes()
+    alert('Đã phân phối xác suất thành công!')
+  } catch (e) {
+    alert(e instanceof Error ? e.message : 'Lỗi')
+  } finally {
+    autoLoading.value = false
+  }
+}
+
 onMounted(loadPrizes)
 </script>
 
 <template>
   <div>
     <!-- Header -->
-    <div class="mb-6 flex items-center justify-between">
-      <div>
-        <h2 class="text-xl font-semibold text-gray-800">Quản lý Giải thưởng</h2>
-        <p class="text-sm text-gray-500">
-          Tổng xác suất:
-          <span :class="totalProbability === 1 ? 'text-green-600' : 'text-red-600'">
-            {{ (totalProbability * 100).toFixed(2) }}%
-          </span>
-          <span v-if="totalProbability !== 1" class="text-red-600">(nên = 100%)</span>
-        </p>
+    <div class="mb-4 md:mb-6">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800 md:text-xl">Quản lý Giải thưởng</h2>
+          <p class="text-xs text-gray-500 md:text-sm">
+            Tổng xác suất:
+            <span :class="totalProbability === 1 ? 'text-green-600' : 'text-red-600'">
+              {{ (totalProbability * 100).toFixed(2) }}%
+            </span>
+            <span v-if="totalProbability !== 1" class="text-red-600">(nên = 100%)</span>
+          </p>
+        </div>
+        <div class="flex w-full gap-2 md:w-auto">
+          <button
+            :disabled="autoLoading"
+            class="flex-1 rounded-lg bg-purple-500 px-3 py-2 text-xs font-medium text-white hover:bg-purple-400 disabled:opacity-50 md:flex-none md:px-4 md:text-sm"
+            @click="autoProbability"
+          >
+            {{ autoLoading ? '...' : '⚖️ Chia %' }}
+          </button>
+          <button
+            class="flex-1 rounded-lg bg-yellow-500 px-3 py-2 text-xs font-medium text-gray-900 hover:bg-yellow-400 md:flex-none md:px-4 md:text-sm"
+            @click="openModal()"
+          >
+            + Thêm giải
+          </button>
+        </div>
       </div>
-      <button
-        class="rounded-lg bg-yellow-500 px-4 py-2 font-medium text-gray-900 hover:bg-yellow-400"
-        @click="openModal()"
-      >
-        + Thêm giải
-      </button>
     </div>
 
     <!-- Loading -->
     <div v-if="loading" class="py-20 text-center text-gray-500">Đang tải...</div>
 
     <!-- Grid -->
-    <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div v-else class="grid gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-3">
       <div
         v-for="prize in prizes"
         :key="prize.id"
@@ -165,11 +191,24 @@ onMounted(loadPrizes)
           <div class="flex-1">
             <h3 class="font-semibold text-gray-800">{{ prize.name }}</h3>
             <p class="text-lg font-bold text-yellow-600">{{ prize.price }} Gold</p>
-            <div class="mt-1 flex gap-2 text-xs text-gray-500">
-              <span>Xác suất: {{ (prize.probability * 100).toFixed(2) }}%</span>
-              <span v-if="prize.stock !== null">• Còn: {{ prize.stock }}</span>
+            <div class="mt-1 flex flex-wrap gap-2 text-xs">
+              <span class="text-gray-500">Xác suất: {{ (prize.probability * 100).toFixed(2) }}%</span>
+              <span
+                v-if="prize.stock !== null"
+                :class="[
+                  'rounded px-1.5 py-0.5 font-medium',
+                  prize.stock === 0 ? 'bg-red-100 text-red-600' :
+                  prize.stock <= 5 ? 'bg-orange-100 text-orange-600' :
+                  'bg-green-100 text-green-600'
+                ]"
+              >
+                Còn: {{ prize.stock }}
+              </span>
+              <span v-else class="rounded bg-blue-100 px-1.5 py-0.5 font-medium text-blue-600">
+                Không giới hạn
+              </span>
             </div>
-            <p v-if="prize.spin_results_count" class="text-xs text-purple-600">
+            <p v-if="prize.spin_results_count" class="mt-1 text-xs text-purple-600">
               Đã trúng {{ prize.spin_results_count }} lần
             </p>
           </div>
@@ -262,29 +301,29 @@ onMounted(loadPrizes)
               />
             </div>
 
-            <div class="mb-4 grid grid-cols-2 gap-4">
-              <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">Màu sắc</label>
-                <div class="flex gap-2">
-                  <input v-model="form.color" type="color" class="h-10 w-14 cursor-pointer" />
-                  <input
-                    v-model="form.color"
-                    type="text"
-                    class="flex-1 rounded-lg border px-3 py-2"
-                  />
-                </div>
-              </div>
-              <div>
-                <label class="mb-1 block text-sm font-medium text-gray-700">
-                  Stock (để trống = vô hạn)
-                </label>
+            <div class="mb-4">
+              <label class="mb-1 block text-sm font-medium text-gray-700">Màu sắc</label>
+              <div class="flex gap-2">
+                <input v-model="form.color" type="color" class="h-10 w-14 cursor-pointer rounded border" />
                 <input
-                  v-model.number="form.stock"
-                  type="number"
-                  min="0"
-                  class="w-full rounded-lg border px-3 py-2"
+                  v-model="form.color"
+                  type="text"
+                  class="flex-1 rounded-lg border px-3 py-2"
                 />
               </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="mb-1 block text-sm font-medium text-gray-700">
+                Số lượng (để trống = vô hạn)
+              </label>
+              <input
+                v-model.number="form.stock"
+                type="number"
+                min="0"
+                placeholder="Không giới hạn"
+                class="w-full rounded-lg border px-3 py-2"
+              />
             </div>
 
             <div class="mb-4 flex items-center gap-2">

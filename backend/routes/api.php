@@ -59,6 +59,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function ()
     // Quản lý giải thưởng
     Route::apiResource('prizes', AdminPrizeController::class);
     Route::post('/prizes/reorder', [AdminPrizeController::class, 'reorder']);
+    Route::post('/prizes/auto-probability', [AdminPrizeController::class, 'autoDistributeProbability']);
 
     // Thống kê
     Route::get('/stats', [AdminStatsController::class, 'index']);

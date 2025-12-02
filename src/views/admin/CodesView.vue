@@ -108,20 +108,20 @@ onMounted(loadCodes)
 <template>
   <div>
     <!-- Header -->
-    <div class="mb-6 flex items-center justify-between">
-      <h2 class="text-xl font-semibold text-gray-800">Quản lý Mã Code</h2>
+    <div class="mb-4 flex flex-col gap-3 md:mb-6 md:flex-row md:items-center md:justify-between">
+      <h2 class="text-lg font-semibold text-gray-800 md:text-xl">Quản lý Mã Code</h2>
       <div class="flex gap-2">
         <button
-          class="rounded-lg bg-yellow-500 px-4 py-2 font-medium text-gray-900 hover:bg-yellow-400"
+          class="flex-1 rounded-lg bg-yellow-500 px-3 py-2 text-sm font-medium text-gray-900 hover:bg-yellow-400 md:flex-none md:px-4"
           @click="openModal('single')"
         >
           + Tạo mã
         </button>
         <button
-          class="rounded-lg bg-purple-600 px-4 py-2 font-medium text-white hover:bg-purple-700"
+          class="flex-1 rounded-lg bg-purple-600 px-3 py-2 text-sm font-medium text-white hover:bg-purple-700 md:flex-none md:px-4"
           @click="openModal('batch')"
         >
-          + Tạo nhiều mã
+          + Tạo nhiều
         </button>
       </div>
     </div>
@@ -129,8 +129,8 @@ onMounted(loadCodes)
     <!-- Loading -->
     <div v-if="loading" class="py-20 text-center text-gray-500">Đang tải...</div>
 
-    <!-- Table -->
-    <div v-else class="overflow-hidden rounded-xl bg-white shadow">
+    <!-- Desktop Table -->
+    <div v-else class="hidden overflow-hidden rounded-xl bg-white shadow md:block">
       <table class="w-full">
         <thead class="bg-gray-50">
           <tr>
@@ -202,6 +202,81 @@ onMounted(loadCodes)
           </tr>
         </tbody>
       </table>
+
+      <div v-if="codes.length === 0" class="py-12 text-center text-gray-500">
+        Chưa có mã code nào
+      </div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div v-if="!loading" class="space-y-3 md:hidden">
+      <div
+        v-for="code in codes"
+        :key="'mobile-' + code.id"
+        class="rounded-xl bg-white p-3 shadow"
+      >
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <code class="rounded bg-gray-100 px-2 py-1 font-mono text-sm font-bold text-purple-600">
+                {{ code.code }}
+              </code>
+              <button
+                class="text-gray-400 hover:text-gray-600"
+                @click="copyCode(code.code)"
+              >
+                📋
+              </button>
+            </div>
+            <p v-if="code.note" class="mt-1 text-xs text-gray-500">{{ code.note }}</p>
+          </div>
+          <span
+            :class="[
+              'rounded-full px-2 py-0.5 text-xs font-medium',
+              code.is_active
+                ? 'bg-green-100 text-green-700'
+                : 'bg-red-100 text-red-700',
+            ]"
+          >
+            {{ code.is_active ? 'On' : 'Off' }}
+          </span>
+        </div>
+
+        <div class="mt-2 grid grid-cols-3 gap-2 text-center text-xs">
+          <div class="rounded bg-yellow-50 p-2">
+            <p class="font-bold text-yellow-600">{{ code.spins_amount }}</p>
+            <p class="text-gray-500">Lượt</p>
+          </div>
+          <div class="rounded bg-blue-50 p-2">
+            <p class="font-bold text-blue-600">{{ code.used_count }}</p>
+            <p class="text-gray-500">Đã dùng</p>
+          </div>
+          <div class="rounded bg-purple-50 p-2">
+            <p class="font-bold text-purple-600">{{ code.max_uses || '∞' }}</p>
+            <p class="text-gray-500">Giới hạn</p>
+          </div>
+        </div>
+
+        <div class="mt-2 flex gap-2">
+          <button
+            :class="[
+              'flex-1 rounded py-1.5 text-xs font-medium',
+              code.is_active
+                ? 'bg-red-100 text-red-600'
+                : 'bg-green-100 text-green-600',
+            ]"
+            @click="toggleActive(code)"
+          >
+            {{ code.is_active ? 'Tắt' : 'Bật' }}
+          </button>
+          <button
+            class="flex-1 rounded bg-gray-100 py-1.5 text-xs font-medium text-gray-600"
+            @click="deleteCode(code)"
+          >
+            Xóa
+          </button>
+        </div>
+      </div>
 
       <div v-if="codes.length === 0" class="py-12 text-center text-gray-500">
         Chưa có mã code nào

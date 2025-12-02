@@ -30,66 +30,66 @@ onMounted(async () => {
     <!-- Stats -->
     <div v-else-if="stats">
       <!-- Overview cards -->
-      <div class="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <div class="rounded-xl bg-white p-6 shadow">
+      <div class="mb-6 grid grid-cols-2 gap-3 md:mb-8 md:gap-6 lg:grid-cols-4">
+        <div class="rounded-xl bg-white p-3 shadow md:p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-500">Tổng lượt quay</p>
-              <p class="text-3xl font-bold text-gray-900">{{ stats.total_spins }}</p>
+              <p class="text-xs text-gray-500 md:text-sm">Tổng lượt quay</p>
+              <p class="text-xl font-bold text-gray-900 md:text-3xl">{{ stats.total_spins }}</p>
             </div>
-            <span class="text-4xl">🎰</span>
+            <span class="text-2xl md:text-4xl">🎰</span>
           </div>
-          <p class="mt-2 text-sm text-green-600">+{{ stats.spins_today }} hôm nay</p>
+          <p class="mt-1 text-xs text-green-600 md:mt-2 md:text-sm">+{{ stats.spins_today }} hôm nay</p>
         </div>
 
-        <div class="rounded-xl bg-white p-6 shadow">
+        <div class="rounded-xl bg-white p-3 shadow md:p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-500">Mã Code</p>
-              <p class="text-3xl font-bold text-gray-900">{{ stats.total_codes }}</p>
+              <p class="text-xs text-gray-500 md:text-sm">Mã Code</p>
+              <p class="text-xl font-bold text-gray-900 md:text-3xl">{{ stats.total_codes }}</p>
             </div>
-            <span class="text-4xl">🎟️</span>
+            <span class="text-2xl md:text-4xl">🎟️</span>
           </div>
-          <p class="mt-2 text-sm text-blue-600">{{ stats.active_codes }} đang hoạt động</p>
+          <p class="mt-1 text-xs text-blue-600 md:mt-2 md:text-sm">{{ stats.active_codes }} hoạt động</p>
         </div>
 
-        <div class="rounded-xl bg-white p-6 shadow">
+        <div class="rounded-xl bg-white p-3 shadow md:p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-500">Sessions</p>
-              <p class="text-3xl font-bold text-gray-900">{{ stats.total_sessions }}</p>
+              <p class="text-xs text-gray-500 md:text-sm">Sessions</p>
+              <p class="text-xl font-bold text-gray-900 md:text-3xl">{{ stats.total_sessions }}</p>
             </div>
-            <span class="text-4xl">👥</span>
+            <span class="text-2xl md:text-4xl">👥</span>
           </div>
-          <p class="mt-2 text-sm text-purple-600">{{ stats.active_sessions }} đang active</p>
+          <p class="mt-1 text-xs text-purple-600 md:mt-2 md:text-sm">{{ stats.active_sessions }} active</p>
         </div>
 
-        <div class="rounded-xl bg-white p-6 shadow">
+        <div class="rounded-xl bg-white p-3 shadow md:p-6">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-500">Giải thưởng</p>
-              <p class="text-3xl font-bold text-gray-900">{{ stats.total_prizes }}</p>
+              <p class="text-xs text-gray-500 md:text-sm">Giải thưởng</p>
+              <p class="text-xl font-bold text-gray-900 md:text-3xl">{{ stats.total_prizes }}</p>
             </div>
-            <span class="text-4xl">🎁</span>
+            <span class="text-2xl md:text-4xl">🎁</span>
           </div>
-          <p class="mt-2 text-sm text-yellow-600">{{ stats.active_prizes }} đang active</p>
+          <p class="mt-1 text-xs text-yellow-600 md:mt-2 md:text-sm">{{ stats.active_prizes }} active</p>
         </div>
       </div>
 
       <!-- Top prizes -->
-      <div class="grid gap-6 lg:grid-cols-2">
-        <div class="rounded-xl bg-white p-6 shadow">
-          <h3 class="mb-4 text-lg font-semibold text-gray-800">Top giải trúng nhiều</h3>
-          <div class="space-y-3">
+      <div class="grid gap-4 md:gap-6 lg:grid-cols-2">
+        <div class="rounded-xl bg-white p-4 shadow md:p-6">
+          <h3 class="mb-3 text-base font-semibold text-gray-800 md:mb-4 md:text-lg">Top giải trúng nhiều</h3>
+          <div class="space-y-2 md:space-y-3">
             <div
               v-for="(prize, index) in stats.top_prizes"
               :key="prize.id"
-              class="flex items-center justify-between rounded-lg bg-gray-50 p-3"
+              class="flex items-center justify-between rounded-lg bg-gray-50 p-2 md:p-3"
             >
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2 md:gap-3">
                 <span
                   :class="[
-                    'flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold',
+                    'flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold md:h-8 md:w-8 md:text-sm',
                     index === 0
                       ? 'bg-yellow-400 text-yellow-900'
                       : index === 1
@@ -102,33 +102,33 @@ onMounted(async () => {
                   {{ index + 1 }}
                 </span>
                 <div>
-                  <p class="font-medium text-gray-800">{{ prize.name }}</p>
-                  <p class="text-sm text-gray-500">{{ prize.price }} Gold</p>
+                  <p class="text-sm font-medium text-gray-800 md:text-base">{{ prize.name }}</p>
+                  <p class="text-xs text-gray-500 md:text-sm">{{ prize.price }} Gold</p>
                 </div>
               </div>
-              <span class="font-bold text-purple-600">{{ prize.spin_results_count }} lần</span>
+              <span class="text-sm font-bold text-purple-600 md:text-base">{{ prize.spin_results_count }}</span>
             </div>
           </div>
         </div>
 
-        <div class="rounded-xl bg-white p-6 shadow">
-          <h3 class="mb-4 text-lg font-semibold text-gray-800">Lượt quay 7 ngày qua</h3>
+        <div class="rounded-xl bg-white p-4 shadow md:p-6">
+          <h3 class="mb-3 text-base font-semibold text-gray-800 md:mb-4 md:text-lg">Lượt quay 7 ngày qua</h3>
           <div class="space-y-2">
             <div
               v-for="day in stats.daily_spins"
               :key="day.date"
-              class="flex items-center gap-4"
+              class="flex items-center gap-2 md:gap-4"
             >
-              <span class="w-24 text-sm text-gray-500">{{ day.date }}</span>
+              <span class="w-16 text-xs text-gray-500 md:w-24 md:text-sm">{{ day.date }}</span>
               <div class="flex-1">
                 <div
-                  class="h-6 rounded bg-purple-500"
+                  class="h-4 rounded bg-purple-500 md:h-6"
                   :style="{
                     width: `${(day.count / Math.max(...stats.daily_spins.map((d) => d.count))) * 100}%`,
                   }"
                 ></div>
               </div>
-              <span class="w-12 text-right font-medium">{{ day.count }}</span>
+              <span class="w-8 text-right text-sm font-medium md:w-12">{{ day.count }}</span>
             </div>
           </div>
         </div>

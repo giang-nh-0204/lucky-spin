@@ -137,81 +137,83 @@ onMounted(loadResults)
     </div>
 
     <!-- Filters -->
-    <div class="mb-6 flex flex-wrap gap-4 rounded-xl bg-white p-4 shadow">
-      <div>
-        <label class="mb-1 block text-sm text-gray-600">Tìm theo mã</label>
-        <input
-          v-model="filters.code"
-          type="text"
-          placeholder="Nhập mã..."
-          class="rounded-lg border px-3 py-2 uppercase"
-          @keyup.enter="applyFilters"
-        />
-      </div>
-      <div>
-        <label class="mb-1 block text-sm text-gray-600">Trạng thái</label>
-        <select
-          v-model="filters.status"
-          class="rounded-lg border px-3 py-2"
-          @change="applyFilters"
-        >
-          <option value="">Tất cả</option>
-          <option value="pending">Chờ nhận</option>
-          <option value="claimed">Đã nhận</option>
-          <option value="expired">Hết hạn</option>
-        </select>
-      </div>
-      <div>
-        <label class="mb-1 block text-sm text-gray-600">Giao hàng</label>
-        <select
-          v-model="filters.delivery_status"
-          class="rounded-lg border px-3 py-2"
-          @change="applyFilters"
-        >
-          <option value="">Tất cả</option>
-          <option value="pending">Chưa gửi</option>
-          <option value="delivered">Đã gửi</option>
-        </select>
-      </div>
-      <div>
-        <label class="mb-1 block text-sm text-gray-600">Từ ngày</label>
-        <input
-          v-model="filters.from"
-          type="date"
-          class="rounded-lg border px-3 py-2"
-          @change="applyFilters"
-        />
-      </div>
-      <div>
-        <label class="mb-1 block text-sm text-gray-600">Đến ngày</label>
-        <input
-          v-model="filters.to"
-          type="date"
-          class="rounded-lg border px-3 py-2"
-          @change="applyFilters"
-        />
-      </div>
-      <div class="flex items-end">
-        <button
-          class="rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
-          @click="applyFilters"
-        >
-          Tìm kiếm
-        </button>
+    <div class="mb-4 rounded-xl bg-white p-3 shadow md:mb-6 md:p-4">
+      <div class="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:gap-4">
+        <div class="col-span-2 md:col-span-1">
+          <label class="mb-1 block text-xs text-gray-600 md:text-sm">Tìm theo mã</label>
+          <input
+            v-model="filters.code"
+            type="text"
+            placeholder="Nhập mã..."
+            class="w-full rounded-lg border px-3 py-2 text-sm uppercase md:w-auto"
+            @keyup.enter="applyFilters"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs text-gray-600 md:text-sm">Trạng thái</label>
+          <select
+            v-model="filters.status"
+            class="w-full rounded-lg border px-3 py-2 text-sm"
+            @change="applyFilters"
+          >
+            <option value="">Tất cả</option>
+            <option value="pending">Chờ nhận</option>
+            <option value="claimed">Đã nhận</option>
+            <option value="expired">Hết hạn</option>
+          </select>
+        </div>
+        <div>
+          <label class="mb-1 block text-xs text-gray-600 md:text-sm">Giao hàng</label>
+          <select
+            v-model="filters.delivery_status"
+            class="w-full rounded-lg border px-3 py-2 text-sm"
+            @change="applyFilters"
+          >
+            <option value="">Tất cả</option>
+            <option value="pending">Chưa gửi</option>
+            <option value="delivered">Đã gửi</option>
+          </select>
+        </div>
+        <div>
+          <label class="mb-1 block text-xs text-gray-600 md:text-sm">Từ ngày</label>
+          <input
+            v-model="filters.from"
+            type="date"
+            class="w-full rounded-lg border px-3 py-2 text-sm"
+            @change="applyFilters"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs text-gray-600 md:text-sm">Đến ngày</label>
+          <input
+            v-model="filters.to"
+            type="date"
+            class="w-full rounded-lg border px-3 py-2 text-sm"
+            @change="applyFilters"
+          />
+        </div>
+        <div class="col-span-2 flex items-end md:col-span-1">
+          <button
+            class="w-full rounded-lg bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-700 md:w-auto"
+            @click="applyFilters"
+          >
+            Tìm kiếm
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Bulk Actions -->
-    <div v-if="selectedIds.length > 0" class="mb-4 flex items-center gap-4 rounded-lg bg-blue-50 p-3">
-      <span class="text-sm text-blue-700">Đã chọn {{ selectedIds.length }} kết quả</span>
+    <div v-if="selectedIds.length > 0" class="mb-4 flex flex-wrap items-center gap-2 rounded-lg bg-blue-50 p-3 md:gap-4">
+      <span class="w-full text-sm text-blue-700 md:w-auto">Đã chọn {{ selectedIds.length }} kết quả</span>
       <button
-        class="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+        class="rounded bg-blue-600 px-3 py-1 text-xs text-white hover:bg-blue-700 md:text-sm"
         @click="openBulkUpdateModal('delivered')"
       >
         Đánh dấu đã gửi
       </button>
       <button
-        class="rounded bg-orange-500 px-3 py-1 text-sm text-white hover:bg-orange-600"
+        class="rounded bg-orange-500 px-3 py-1 text-xs text-white hover:bg-orange-600 md:text-sm"
         @click="openBulkUpdateModal('pending')"
       >
         Đánh dấu chưa gửi
@@ -221,8 +223,8 @@ onMounted(loadResults)
     <!-- Loading -->
     <div v-if="loading" class="py-20 text-center text-gray-500">Đang tải...</div>
 
-    <!-- Table -->
-    <div v-else class="overflow-hidden rounded-xl bg-white shadow">
+    <!-- Desktop Table -->
+    <div v-else class="hidden overflow-hidden rounded-xl bg-white shadow md:block">
       <table class="w-full">
         <thead class="bg-gray-50">
           <tr>
@@ -234,12 +236,12 @@ onMounted(loadResults)
                 @change="toggleSelectAll"
               />
             </th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">Thời gian</th>
             <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">Mã</th>
             <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">Giải thưởng</th>
             <th class="px-4 py-3 text-center text-sm font-medium text-gray-600">Giá trị</th>
             <th class="px-4 py-3 text-center text-sm font-medium text-gray-600">Trạng thái</th>
             <th class="px-4 py-3 text-center text-sm font-medium text-gray-600">Giao hàng</th>
+            <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">Thời gian</th>
           </tr>
         </thead>
         <tbody class="divide-y">
@@ -251,9 +253,6 @@ onMounted(loadResults)
                 type="checkbox"
                 class="h-4 w-4 rounded border-gray-300"
               />
-            </td>
-            <td class="px-4 py-3 text-sm text-gray-600">
-              {{ formatDate(result.created_at) }}
             </td>
             <td class="px-4 py-3">
               <span class="rounded bg-purple-100 px-2 py-1 font-mono text-xs font-medium text-purple-700">
@@ -312,6 +311,9 @@ onMounted(loadResults)
                 </button>
               </div>
             </td>
+            <td class="px-4 py-3 text-sm text-gray-600">
+              {{ formatDate(result.created_at) }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -331,6 +333,127 @@ onMounted(loadResults)
         </button>
         <span class="text-sm text-gray-600">
           Trang {{ currentPage }} / {{ totalPages }}
+        </span>
+        <button
+          :disabled="currentPage >= totalPages"
+          class="rounded bg-gray-100 px-3 py-1 hover:bg-gray-200 disabled:opacity-50"
+          @click="currentPage++; loadResults()"
+        >
+          →
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div v-if="!loading" class="space-y-3 md:hidden">
+      <!-- Select All -->
+      <div class="flex items-center gap-2 rounded-lg bg-white p-3 shadow">
+        <input
+          v-model="selectAll"
+          type="checkbox"
+          class="h-4 w-4 rounded border-gray-300"
+          @change="toggleSelectAll"
+        />
+        <span class="text-sm text-gray-600">Chọn tất cả</span>
+      </div>
+
+      <!-- Cards -->
+      <div
+        v-for="result in results"
+        :key="'mobile-' + result.id"
+        class="rounded-xl bg-white p-3 shadow"
+      >
+        <div class="flex items-start gap-3">
+          <input
+            v-model="selectedIds"
+            :value="result.id"
+            type="checkbox"
+            class="mt-1 h-4 w-4 rounded border-gray-300"
+          />
+          <div class="flex-1">
+            <!-- Prize info -->
+            <div class="flex items-center gap-2">
+              <img
+                v-if="result.prize.image_url"
+                :src="result.prize.image_url"
+                :alt="result.prize.name"
+                class="h-10 w-10 object-contain"
+              />
+              <div>
+                <p class="font-medium text-gray-800">{{ result.prize.name }}</p>
+                <p class="text-sm font-medium text-yellow-600">{{ result.prize.price }} Gold</p>
+              </div>
+            </div>
+
+            <!-- Info grid -->
+            <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <span class="text-gray-500">Mã:</span>
+                <span class="ml-1 rounded bg-purple-100 px-1.5 py-0.5 font-mono font-medium text-purple-700">
+                  {{ result.session?.code?.code || '-' }}
+                </span>
+              </div>
+              <div>
+                <span class="text-gray-500">Trạng thái:</span>
+                <span
+                  :class="[
+                    'ml-1 inline-block rounded-full px-1.5 py-0.5 font-medium',
+                    statusMap[result.status]?.class || 'bg-gray-100 text-gray-600',
+                  ]"
+                >
+                  {{ statusMap[result.status]?.label || result.status }}
+                </span>
+              </div>
+              <div class="col-span-2">
+                <span class="text-gray-500">Thời gian:</span>
+                <span class="ml-1 text-gray-600">{{ formatDate(result.created_at) }}</span>
+              </div>
+            </div>
+
+            <!-- Delivery actions -->
+            <div class="mt-2 flex items-center gap-2">
+              <span
+                :class="[
+                  'inline-block rounded-full px-2 py-1 text-xs font-medium',
+                  deliveryStatusMap[result.delivery_status]?.class || 'bg-gray-100 text-gray-600',
+                ]"
+              >
+                {{ deliveryStatusMap[result.delivery_status]?.label || result.delivery_status }}
+              </span>
+              <button
+                v-if="result.delivery_status === 'pending'"
+                class="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
+                @click="updateDeliveryStatus(result.id, 'delivered')"
+              >
+                ✓ Đã gửi
+              </button>
+              <button
+                v-else
+                class="rounded bg-orange-400 px-2 py-1 text-xs text-white hover:bg-orange-500"
+                @click="updateDeliveryStatus(result.id, 'pending')"
+              >
+                ↩ Hoàn tác
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="results.length === 0" class="py-12 text-center text-gray-500">
+        Không có kết quả nào
+      </div>
+
+      <!-- Mobile Pagination -->
+      <div v-if="totalPages > 1" class="flex items-center justify-center gap-2 rounded-lg bg-white p-3 shadow">
+        <button
+          :disabled="currentPage <= 1"
+          class="rounded bg-gray-100 px-3 py-1 hover:bg-gray-200 disabled:opacity-50"
+          @click="currentPage--; loadResults()"
+        >
+          ←
+        </button>
+        <span class="text-sm text-gray-600">
+          {{ currentPage }} / {{ totalPages }}
         </span>
         <button
           :disabled="currentPage >= totalPages"

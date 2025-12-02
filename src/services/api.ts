@@ -68,6 +68,7 @@ export interface Prize {
   image: string
   image_url: string // URL đầy đủ từ server
   color: string
+  stock?: number | null // null = không giới hạn
 }
 
 export interface SessionInfo {

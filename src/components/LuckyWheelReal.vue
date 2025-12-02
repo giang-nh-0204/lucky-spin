@@ -9,6 +9,7 @@ interface Prize {
   image: string
   image_url?: string
   color: string
+  stock?: number | null // null = unlimited
 }
 
 // Props
@@ -57,7 +58,8 @@ const loadPrizes = async () => {
       price: p.price,
       image: p.image_url || p.image,
       image_url: p.image_url,
-      color: p.color
+      color: p.color,
+      stock: p.stock
     }))
     prizesLoaded.value = true
   } catch (e) {
@@ -213,6 +215,9 @@ const spinReal = async () => {
   isRealResult.value = true
 
   try {
+    // 0. Reload prizes để đảm bảo đồng bộ với backend
+    await loadPrizes()
+
     // 1. Gọi API để lấy góc quay (kết quả đã xác định ở server)
     // Gửi currentRotation để backend tính delta đúng
     const currentRotation = ((rotation.value % 360) + 360) % 360
@@ -546,6 +551,9 @@ const getTextTransform = (index: number, total: number): string => {
             </p>
             <p :class="prize.price === 4500 ? 'text-white text-[9px] sm:text-[10px] font-black' : 'text-yellow-300 text-[9px] sm:text-[10px] font-bold'">
               {{ prize.price }} vàng
+            </p>
+            <p v-if="prize.stock !== null && prize.stock !== undefined" class="text-[8px] sm:text-[9px] mt-1" :class="prize.stock <= 5 ? 'text-red-300' : 'text-green-300'">
+              Còn {{ prize.stock }} phần
             </p>
           </div>
         </div>
