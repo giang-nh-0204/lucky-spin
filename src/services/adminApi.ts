@@ -79,7 +79,7 @@ export interface Prize {
   name: string
   price: number
   image: string
-  image_url: string // URL đầy đủ từ server
+  image_url?: string // URL đầy đủ từ server (generated)
   color: string
   probability: number
   is_active: boolean
